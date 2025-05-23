@@ -24,9 +24,15 @@ export class TasksService {
   }
 
   // Read all tasks
-  async readAllTasks(): Promise<Task[] | { message: string }> {
+  async readAllTasks(status?: string): Promise<Task[] | { message: string }> {
     try {
-      const task = await this.taskRepo.find();
+      const query = this.taskRepo.createQueryBuilder('task');
+
+      if (status) {
+        query.andWhere('task.status = :status', { status });
+      }
+
+      const task = await query.getMany();
       if (task.length === 0) return { message: 'No tasks found' };
       return task;
     } catch (error) {

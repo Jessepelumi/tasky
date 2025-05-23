@@ -7,10 +7,12 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { CreateTaskDto } from '../dto/create-task.dto';
 import { UpdateTaskDto } from '../dto/update-task.dto';
 import { TasksService } from '../services/tasks.service';
+import { TaskStatus } from 'src/utils/task-status.enum';
 
 @Controller('tasks')
 export class TasksController {
@@ -23,8 +25,8 @@ export class TasksController {
   }
 
   @Get()
-  getTasks() {
-    return this.taskService.readAllTasks();
+  getTasks(@Query('status') status?: TaskStatus) {
+    return this.taskService.readAllTasks(status);
   }
 
   @Get(':id')
